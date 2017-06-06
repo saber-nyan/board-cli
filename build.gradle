@@ -1,0 +1,12 @@
+group 'board-cli'
+version '0.0.1a'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {}

@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="board-cli:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/board_cli_jar</output-path>
+    <root id="archive" name="board-cli.jar">
+      <element id="module-output" name="board-cli" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/lanterna-3.0.0-rc1.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
