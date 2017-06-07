@@ -2,7 +2,14 @@
   <artifact type="jar" build-on-make="true" name="board-cli:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/board_cli_jar</output-path>
     <root id="archive" name="board-cli.jar">
-      <element id="module-output" name="board-cli" />
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="board-core" />
+      <element id="module-output" name="board-abstract-parser" />
+      <element id="module-output" name="board-module-harkach" />
+      <element id="module-output" name="board-utils" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/json-20170516.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/lanterna-3.0.0-rc1.jar" path-in-jar="/" />
     </root>
   </artifact>
