@@ -8,7 +8,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="board-abstract-parser" />
-    <orderEntry type="module" module-name="board-module-harkach" />
     <orderEntry type="library" name="com.googlecode.lanterna:lanterna:3.0.0-rc1" level="project" />
+    <orderEntry type="module" module-name="board-utils" />
   </component>
 </module>

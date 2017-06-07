@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="board-core:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/jar</output-path>
+    <root id="archive" name="board-core.jar">
+      <element id="module-output" name="board-core" />
+      <element id="module-output" name="board-abstract-parser" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/lanterna-3.0.0-rc1.jar" path-in-jar="/" />
+      <element id="module-output" name="board-utils" />
+    </root>
+  </artifact>
+</component>

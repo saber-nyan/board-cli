@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="board-module-harkach:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/jar</output-path>
+    <root id="archive" name="board-module-harkach.jar">
+      <element id="module-output" name="board-module-harkach" />
+      <element id="module-output" name="board-abstract-parser" />
+      <element id="module-output" name="board-utils" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/json-20170516.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
