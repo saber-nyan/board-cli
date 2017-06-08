@@ -1,5 +1,6 @@
 package ru.saber_nyan.parser;
 
+@SuppressWarnings("unused")
 public abstract class File {
 	private String name;
 	private long height;

@@ -2,6 +2,7 @@ package ru.saber_nyan.parser;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("unused")
 public abstract class Thread {
 	private String boardName;
 	private String title;

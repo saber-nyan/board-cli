@@ -9,13 +9,15 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 public class ClassLoader {
-	public ArrayList<Class> loadClassFromJar(String path, String[] loadIfEndsWith, String loadIfContains)
+	public ArrayList<Class> loadClassesFromJar(String path, String loadIfContains)
 			throws IOException, ClassNotFoundException {
 
 		JarFile jarFile = new JarFile(path);
 		Enumeration<JarEntry> entryEnumeration = jarFile.entries();
 
-		URL[] urls = {new URL("jar:file:" + path + "!/")};
+		URL[] urls = {
+				new URL("jar:file:" + path + "!/")
+		};
 		URLClassLoader classLoader = URLClassLoader.newInstance(urls);
 
 		ArrayList<Class> classes = new ArrayList<>();
@@ -27,20 +29,12 @@ public class ClassLoader {
 			}
 
 			String className = jarEntry.getName().substring(0, jarEntry.getName().length() - 6); // Расширение .class
+			className = className.replace('/', '.');
 
-			boolean match = false;
-			for (String pattern : loadIfEndsWith) {
-				if (className.endsWith(pattern) && className.contains(loadIfContains)) {
-					match = true;
-					break;
-				}
-			}
-
-			if (!match) {
+			if (!className.contains(loadIfContains) || className.contains("ru.saber_nyan.parser")) { // Не грузим абстрактный класс
 				continue;
 			}
 
-			className = className.replace('/', '.');
 			classes.add(classLoader.loadClass(className));
 		}
 		return classes;

@@ -2,6 +2,7 @@ package ru.saber_nyan.parser;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("unused")
 public abstract class Post {
 	private long number;
 	private boolean banned;

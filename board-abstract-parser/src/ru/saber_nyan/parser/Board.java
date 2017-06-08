@@ -2,6 +2,7 @@ package ru.saber_nyan.parser;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("unused")
 public abstract class Board {
 	private String name;
 	private long page;
@@ -9,6 +10,12 @@ public abstract class Board {
 	private long bumpLimit;
 	private ArrayList<Thread> threads;
 	private String userAgent;
+
+	public Board(String userAgent, String boardName, long boardPage) {
+	}
+
+	protected Board() {
+	}
 
 	public String getUserAgent() {
 		return userAgent;
