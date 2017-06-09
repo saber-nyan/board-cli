@@ -7,6 +7,7 @@ import ru.saber_nyan.parser.Post;
 
 import java.util.ArrayList;
 
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class HarkachPost extends Post {
 
 	private static final String KEY_POST_NUMBER = "num";
@@ -23,19 +24,19 @@ public class HarkachPost extends Post {
 	private static final String KEY_POST_FILES = "files";
 
 	public HarkachPost(JSONObject post) {
-		this.setNumber(post.getLong(KEY_POST_NUMBER));
-		this.setBanned(post.getInt(KEY_POST_BANNED) != 0);
-		this.setClosed(post.getInt(KEY_POST_CLOSED) != 0);
-		this.setOp(post.getInt(KEY_POST_OP) != 0);
-		this.setSticky(post.getInt(KEY_POST_STICKY) != 0);
-		this.setComment(post.getString(KEY_POST_COMMENT));
-		this.setDate(post.getString(KEY_POST_DATE));
-		this.setEmail(post.getString(KEY_POST_EMAIL));
-		this.setName(post.getString(KEY_POST_NAME));
-		this.setSubject(post.getString(KEY_POST_SUBJECT));
-		this.setTripcode(post.getString(KEY_POST_TRIPCODE));
+		this.setNumber(post.optLong(KEY_POST_NUMBER));
+		this.setBanned(post.optInt(KEY_POST_BANNED) != 0);
+		this.setClosed(post.optInt(KEY_POST_CLOSED) != 0);
+		this.setOp(post.optInt(KEY_POST_OP) != 0);
+		this.setSticky(post.optInt(KEY_POST_STICKY) != 0);
+		this.setComment(post.optString(KEY_POST_COMMENT));
+		this.setDate(post.optString(KEY_POST_DATE));
+		this.setEmail(post.optString(KEY_POST_EMAIL));
+		this.setName(post.optString(KEY_POST_NAME));
+		this.setSubject(post.optString(KEY_POST_SUBJECT));
+		this.setTripcode(post.optString(KEY_POST_TRIPCODE));
 
-		JSONArray filesArray = post.getJSONArray(KEY_POST_FILES);
+		JSONArray filesArray = post.optJSONArray(KEY_POST_FILES);
 
 		ArrayList<File> files = new ArrayList<>();
 

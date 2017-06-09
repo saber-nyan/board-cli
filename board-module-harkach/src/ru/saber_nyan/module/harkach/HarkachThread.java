@@ -24,22 +24,23 @@ public class HarkachThread extends Thread {
 	}
 
 	@Override
-	public void load() throws Exception {
+	public void load() throws RuntimeException {
 		Http http = new Http();
 		String url = String.format(API_URL, this.getBoardName(), String.valueOf(this.getNumber()));
 		http.sendGet(url, this.getUserAgent());
 
 		if (http.isError()) {
-			throw http.getException();
+			throw new RuntimeException("(Thread loading) Error connecting to server!",
+					http.getException());
 		}
 
 		JSONObject jsonObject = new JSONObject(http.getResult());
-		this.setTitle(jsonObject.getString(KEY_THREAD_TITLE));
-		this.setPostCount(jsonObject.getLong(KEY_THREAD_POST_COUNT));
-		this.setFileCount(jsonObject.getLong(KEY_THREAD_FILE_COUNT));
+		this.setTitle(jsonObject.optString(KEY_THREAD_TITLE));
+		this.setPostCount(jsonObject.optLong(KEY_THREAD_POST_COUNT));
+		this.setFileCount(jsonObject.optLong(KEY_THREAD_FILE_COUNT));
 
-		JSONObject thisThread = jsonObject.getJSONArray(KEY_THREADS).getJSONObject(0);
-		JSONArray postsArray = thisThread.getJSONArray(KEY_THREAD_POSTS);
+		JSONObject thisThread = jsonObject.optJSONArray(KEY_THREADS).getJSONObject(0);
+		JSONArray postsArray = thisThread.optJSONArray(KEY_THREAD_POSTS);
 		long postsCount = postsArray.length();
 
 		ArrayList<Post> posts = new ArrayList<>();

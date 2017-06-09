@@ -1,8 +1,10 @@
 package ru.saber_nyan.parser;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "WeakerAccess"})
 public abstract class Post {
 	private long number;
 	private boolean banned;
@@ -16,6 +18,12 @@ public abstract class Post {
 	private boolean sticky;
 	private String subject;
 	private String tripcode;
+
+	public Post(JSONObject post) {
+	}
+
+	protected Post() {
+	}
 
 	public long getNumber() {
 		return number;

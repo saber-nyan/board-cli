@@ -2,7 +2,7 @@ package ru.saber_nyan.parser;
 
 import java.util.ArrayList;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "WeakerAccess"})
 public abstract class Thread {
 	private String boardName;
 	private String title;
@@ -11,6 +11,12 @@ public abstract class Thread {
 	private long fileCount;
 	private ArrayList<Post> posts;
 	private String userAgent;
+
+	public Thread(String boardName, long threadNum, String userAgent) {
+	}
+
+	protected Thread() {
+	}
 
 	public String getBoardName() {
 		return boardName;
@@ -68,5 +74,5 @@ public abstract class Thread {
 		this.userAgent = userAgent;
 	}
 
-	public abstract void load() throws Exception;
+	public abstract void load() throws RuntimeException;
 }

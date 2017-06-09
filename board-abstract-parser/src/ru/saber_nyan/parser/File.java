@@ -1,12 +1,20 @@
 package ru.saber_nyan.parser;
 
-@SuppressWarnings("unused")
+import jdk.nashorn.internal.parser.JSONParser;
+
+@SuppressWarnings({"unused", "WeakerAccess"})
 public abstract class File {
 	private String name;
 	private long height;
 	private long width;
 	private String downloadName;
 	private String downloadUrl;
+
+	public File(JSONParser file) {
+	}
+
+	protected File() {
+	}
 
 	public String getName() {
 		return name;
@@ -48,5 +56,5 @@ public abstract class File {
 		this.downloadUrl = downloadUrl;
 	}
 
-	public abstract void load() throws Exception;
+	public abstract void load() throws RuntimeException;
 }

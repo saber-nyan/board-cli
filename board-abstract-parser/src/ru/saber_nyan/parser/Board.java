@@ -2,7 +2,7 @@ package ru.saber_nyan.parser;
 
 import java.util.ArrayList;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "WeakerAccess"})
 public abstract class Board {
 	private String name;
 	private long page;
@@ -11,7 +11,7 @@ public abstract class Board {
 	private ArrayList<Thread> threads;
 	private String userAgent;
 
-	public Board(String userAgent, String boardName, long boardPage) {
+	public Board(String userAgent, String boardName, String boardDesc, long boardPage) {
 	}
 
 	protected Board() {
@@ -65,5 +65,5 @@ public abstract class Board {
 		this.page = page;
 	}
 
-	public abstract void load() throws Exception;
+	public abstract void load() throws RuntimeException;
 }

@@ -17,22 +17,23 @@ public class HarkachFile extends File {
 
 	public HarkachFile(JSONObject file) {
 		try {
-			this.setName(file.getString(KEY_FILE_NAME));
+			this.setName(file.optString(KEY_FILE_NAME));
 		} catch (JSONException e) {
-			this.setName(file.getString(KEY_FILE_DOWNLOAD_NAME));
+			this.setName(file.optString(KEY_FILE_DOWNLOAD_NAME));
 		}
-		this.setHeight(file.getLong(KEY_FILE_HEIGHT));
-		this.setWidth(file.getLong(KEY_FILE_WIDTH));
-		this.setDownloadName(file.getString(KEY_FILE_DOWNLOAD_NAME));
-		this.setDownloadUrl(API_URL + file.getString(KEY_FILE_DOWNLOAD_URL));
+		this.setHeight(file.optLong(KEY_FILE_HEIGHT));
+		this.setWidth(file.optLong(KEY_FILE_WIDTH));
+		this.setDownloadName(file.optString(KEY_FILE_DOWNLOAD_NAME));
+		this.setDownloadUrl(API_URL + file.optString(KEY_FILE_DOWNLOAD_URL));
 	}
 
 	@Override
-	public void load() throws Exception {
+	public void load() throws RuntimeException {
 		Http http = new Http();
 		http.sendGetBinaryToFile(this.getDownloadUrl(), TMP_DIR + this.getDownloadName());
 		if (http.isError()) {
-			throw http.getException();
+			throw new RuntimeException("(File loading) Error connecting to server!",
+					http.getException());
 		}
 	}
 }

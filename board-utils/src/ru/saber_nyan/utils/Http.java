@@ -2,6 +2,7 @@ package ru.saber_nyan.utils;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -35,7 +36,7 @@ public class Http {
 			connection.setRequestProperty("User-Agent", userAgent);
 			int responseCode = connection.getResponseCode();
 			if (responseCode != HttpURLConnection.HTTP_OK) {
-				throw new Exception("Response code is not \"HTTP/1.0 200 OK\" (" + responseCode + ")!");
+				throw new RuntimeException("Response code is not \"HTTP/1.0 200 OK\" (" + responseCode + ")!");
 			}
 
 			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -48,7 +49,7 @@ public class Http {
 
 			in.close();
 			this.result = response.toString();
-		} catch (Exception e) {
+		} catch (RuntimeException | IOException e) {
 			this.exception = e;
 			this.isError = true;
 		}
@@ -61,7 +62,7 @@ public class Http {
 			connection.setRequestMethod("GET");
 			int responseCode = connection.getResponseCode();
 			if (responseCode != HttpURLConnection.HTTP_OK) {
-				throw new Exception("Response code is not \"HTTP/1.0 200 OK\" (" + responseCode + ")!");
+				throw new RuntimeException("Response code is not \"HTTP/1.0 200 OK\" (" + responseCode + ")!");
 			}
 
 			InputStream input = connection.getInputStream();
@@ -74,8 +75,7 @@ public class Http {
 			}
 
 			output.close();
-
-		} catch (Exception e) {
+		} catch (RuntimeException | IOException e) {
 			this.exception = e;
 			this.isError = true;
 		}

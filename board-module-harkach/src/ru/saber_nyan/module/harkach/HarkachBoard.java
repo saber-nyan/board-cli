@@ -11,18 +11,19 @@ import java.util.ArrayList;
 public class HarkachBoard extends Board {
 
 	private static final String API_URL = "https://2ch.hk/%s/%s.json";
-	private static final String KEY_BOARD_LONG_NAME = "BoardName";
 	private static final String KEY_BOARD_BUMP_LIMIT = "bump_limit";
 	private static final String KEY_BOARD_THREADS = "threads";
+	private static final String KEY_BOARD_THREAD_NUM = "thread_num";
 
-	public HarkachBoard(String userAgent, String boardName, long boardPage) {
+	public HarkachBoard(String userAgent, String boardName, String boardDesc, long boardPage) {
 		this.setUserAgent(userAgent);
 		this.setName(boardName);
+		this.setLongName(boardDesc);
 		this.setPage(boardPage);
 	}
 
 	@Override
-	public void load() throws Exception {
+	public void load() throws RuntimeException {
 		Http http = new Http();
 		String pageStr;
 		long page = this.getPage();
@@ -35,21 +36,21 @@ public class HarkachBoard extends Board {
 		http.sendGet(url, this.getUserAgent());
 
 		if (http.isError()) {
-			throw http.getException();
+			throw new RuntimeException("(Board loading) Error connecting to server!",
+					http.getException());
 		}
 
 		JSONObject jsonObject = new JSONObject(http.getResult());
-		this.setLongName(jsonObject.getString(KEY_BOARD_LONG_NAME));
-		this.setBumpLimit(jsonObject.getLong(KEY_BOARD_BUMP_LIMIT));
+		this.setBumpLimit(jsonObject.optLong(KEY_BOARD_BUMP_LIMIT));
 
-		JSONArray threadsArray = jsonObject.getJSONArray(KEY_BOARD_THREADS);
+		JSONArray threadsArray = jsonObject.optJSONArray(KEY_BOARD_THREADS);
 		long threadsCount = threadsArray.length();
 
 		ArrayList<Thread> threads = new ArrayList<>();
 
 		for (long i = 0; i < threadsCount; i++) {
 			Thread newThread = new HarkachThread(this.getName(),
-					threadsArray.getJSONObject((int) i).getLong("thread_num"),
+					threadsArray.getJSONObject((int) i).getLong(KEY_BOARD_THREAD_NUM),
 					this.getUserAgent());
 			threads.add(newThread);
 		}
