@@ -1,6 +1,7 @@
 [![Star this repo](http://githubbadges.com/star.svg?user=saber-nyan&repo=board-cli&style=flat)](https://github.com/saber-nyan/board-cli)
 [![Fork this repo](http://githubbadges.com/fork.svg?user=saber-nyan&repo=board-cli&style=flat)](https://github.com/saber-nyan/board-cli/fork)
 [![Issues](https://img.shields.io/github/issues/saber-nyan/board-cli.svg)](https://github.com/saber-nyan/board-cli/issues)
+[![Release](http://github-release-version.herokuapp.com/github/saber-nyan/board-cli/release.svg?style=flat)](https://github.com/saber-nyan/board-cli/releases/latest)
 # board-cli
 Консольный клиент для имиджборд.
 Работоспособность на M$ Windows возможна, **но не гарантируется**.
@@ -15,7 +16,7 @@
 * **IntelliJ IDEA** (нужна только для сборки) *Простите.*
 
 ## Как запустить?
-1. Качаешь `board-core.jar` и `board-module-name.jar` из **Releases**.
+1. Качаешь `board-core.jar` и `board-module-name.jar` из [Releases](https://github.com/saber-nyan/board-cli/releases/latest).
 2. Кладешь их рядом.
 3. Запускаешь `java -jar ./board-core.jar`.
 4. ??????
