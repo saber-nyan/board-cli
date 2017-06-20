@@ -5,6 +5,9 @@
 .nfs*
 *.iws
 /out/
+.gradle/
+/build/
+*/build/
 .idea_modules/
 atlassian-ide-plugin.xml
 com_crashlytics_export_strings.xml
@@ -22,3 +25,4 @@ fabric.properties
 *.rar
 hs_err_pid*
 !/lib/*
+!/gradle/wrapper/*
