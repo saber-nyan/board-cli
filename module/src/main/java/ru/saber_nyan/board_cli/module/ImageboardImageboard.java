@@ -14,9 +14,52 @@
  * limitations under the License.                                             *
  ******************************************************************************/
 
-rootProject.name = 'board-cli'
-include 'core'
-include 'module'
-include 'module-harkach'
-include 'utils'
+package ru.saber_nyan.board_cli.module;
 
+import okhttp3.OkHttpClient;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.util.List;
+
+/**
+ * Contains a list of boards of imageboard.
+ */
+@SuppressWarnings({"unused", "WeakerAccess"})
+public abstract class ImageboardImageboard {
+	/**
+	 * List of boards.
+	 */
+	@Nullable
+	private List<ImageboardBoard> boards = null;
+
+	/**
+	 * Loads a list of boards.
+	 *
+	 * @param okHttpClient okHttp3 client
+	 * @throws IOException   if GET request failed
+	 *                       (try to cast to {@code utils.HttpException} first!)
+	 * @throws JSONException if received JSON is invalid
+	 */
+	public ImageboardImageboard(@NotNull OkHttpClient okHttpClient)
+			throws IOException, JSONException {
+		super();
+	}
+
+	/**
+	 * @return {@link #boards}
+	 */
+	@Nullable
+	public List<ImageboardBoard> getBoards() {
+		return boards;
+	}
+
+	/**
+	 * @param boards {@link #boards}
+	 */
+	public void setBoards(@Nullable List<ImageboardBoard> boards) {
+		this.boards = boards;
+	}
+}

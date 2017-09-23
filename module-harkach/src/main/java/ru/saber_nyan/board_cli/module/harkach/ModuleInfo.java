@@ -14,9 +14,39 @@
  * limitations under the License.                                             *
  ******************************************************************************/
 
-rootProject.name = 'board-cli'
-include 'core'
-include 'module'
-include 'module-harkach'
-include 'utils'
+package ru.saber_nyan.board_cli.module.harkach;
 
+/**
+ * Module for <i>2ch.hk</i> (<i>2ch.pm</i>).
+ * <p>
+ * API reference: <a href="https://2ch.hk/abu/res/42375.html">link</a>
+ *
+ * @author saber-nyan
+ */
+@SuppressWarnings("unused")
+public class ModuleInfo extends ru.saber_nyan.board_cli.module.ModuleInfo {
+	/**
+	 * The display name of the module.
+	 */
+	public static final String moduleName = "Харкач [2ch.hk]";
+	/**
+	 * Class name: {@link HarkachImageboard}.
+	 */
+	public static final String imageboardName = HarkachImageboard.class.getCanonicalName();
+	/**
+	 * Class name: {@link HarkachBoard}.
+	 */
+	public static final String boardName = HarkachBoard.class.getCanonicalName();
+	/**
+	 * Class name: {@link HarkachThread}.
+	 */
+	public static final String threadName = HarkachThread.class.getCanonicalName();
+	/**
+	 * Class name: {@link HarkachPost}.
+	 */
+	public static final String postName = HarkachPost.class.getCanonicalName();
+	/**
+	 * Class name: {@link HarkachFile}.
+	 */
+	public static final String fileName = HarkachFile.class.getCanonicalName();
+}

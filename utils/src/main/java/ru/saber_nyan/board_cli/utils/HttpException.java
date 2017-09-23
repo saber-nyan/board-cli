@@ -14,9 +14,47 @@
  * limitations under the License.                                             *
  ******************************************************************************/
 
-rootProject.name = 'board-cli'
-include 'core'
-include 'module'
-include 'module-harkach'
-include 'utils'
+package ru.saber_nyan.board_cli.utils;
 
+import java.io.IOException;
+
+/**
+ * Enhanced {@link IOException}: it contains {@link #responseCode}
+ * from server!
+ */
+public class HttpException extends IOException {
+
+	/**
+	 * Response code from server.
+	 */
+	private final int responseCode;
+
+	/**
+	 * Constructs an {@code HttpException} with specified body.
+	 *
+	 * @param responseBody the detail responseBody (which is saved for later retrieval
+	 *                     by the {@link #getMessage()} method)
+	 * @param responseCode server response code
+	 */
+	public HttpException(String responseBody, int responseCode) {
+		super(responseBody);
+		this.responseCode = responseCode;
+	}
+
+	/**
+	 * Constructs an {@code HttpException} with specified response code.
+	 *
+	 * @param responseCode server response code
+	 */
+	public HttpException(int responseCode) {
+		super();
+		this.responseCode = responseCode;
+	}
+
+	/**
+	 * @return {@link #responseCode}
+	 */
+	public int getResponseCode() {
+		return responseCode;
+	}
+}

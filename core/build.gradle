@@ -14,9 +14,37 @@
  * limitations under the License.                                             *
  ******************************************************************************/
 
-rootProject.name = 'board-cli'
-include 'core'
-include 'module'
-include 'module-harkach'
-include 'utils'
+group 'board-cli'
+version '0.0.1a'
 
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.intellij:annotations:12.0'
+    compile 'org.slf4j:slf4j-api:1.7.25'
+    compile 'ch.qos.logback:logback-classic:1.2.3'
+    compile 'commons-cli:commons-cli:1.4'
+    compile project(':module')
+    compile project(':utils')
+}
+
+jar {
+    archiveName = 'board-core.jar'
+    destinationDir = file("${rootDir}/build/jars")
+    manifest.attributes("Main-Class": "ru.saber_nyan.board_cli.core.Main")
+    from {
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+        configurations.runtime.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}

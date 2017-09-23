@@ -14,9 +14,36 @@
  * limitations under the License.                                             *
  ******************************************************************************/
 
-rootProject.name = 'board-cli'
-include 'core'
-include 'module'
-include 'module-harkach'
-include 'utils'
+package ru.saber_nyan.board_cli.module;
 
+/**
+ * Provides information about the module to
+ * work with {@link sun.reflect.Reflection} API.
+ */
+@SuppressWarnings("unused")
+public abstract class ModuleInfo {
+	/**
+	 * The display name of the module.
+	 */
+	public static final String moduleName = null;
+	/**
+	 * Class name: {@link ImageboardImageboard}.
+	 */
+	public static final String imageboardName = "imageboardName";
+	/**
+	 * Class name: {@link ImageboardBoard}.
+	 */
+	public static final String boardName = "boardName";
+	/**
+	 * Class name: {@link ImageboardThread}.
+	 */
+	public static final String threadName = "threadName";
+	/**
+	 * Class name: {@link ImageboardPost}.
+	 */
+	public static final String postName = "postName";
+	/**
+	 * Class name: {@link ImageboardFile}.
+	 */
+	public static final String fileName = "fileName";
+}

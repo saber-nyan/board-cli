@@ -1,0 +1,249 @@
+/******************************************************************************
+ * Copyright © 2017 saber-nyan                                                *
+ *                                                                            *
+ * Licensed under the Apache License, Version 2.0 (the "License");            *
+ * you may not use this file except in compliance with the License.           *
+ * You may obtain a copy of the License at                                    *
+ *                                                                            *
+ *     http://www.apache.org/licenses/LICENSE-2.0                             *
+ *                                                                            *
+ * Unless required by applicable law or agreed to in writing, software        *
+ * distributed under the License is distributed on an "AS IS" BASIS,          *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ * See the License for the specific language governing permissions and        *
+ * limitations under the License.                                             *
+ ******************************************************************************/
+
+package ru.saber_nyan.board_cli.core;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import org.apache.commons.cli.*;
+import org.jetbrains.annotations.Nullable;
+import ru.saber_nyan.board_cli.module.ImageboardBoard;
+import ru.saber_nyan.board_cli.module.ImageboardImageboard;
+import ru.saber_nyan.board_cli.utils.LoggerImpl;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * Here we go!
+ */
+@SuppressWarnings("unchecked")
+final class Main {
+
+	private static final String TMP_DIR = System.getProperty("java.io.tmpdir");
+
+	private static final Logger logger = LoggerImpl.getLogger(Main.class, TMP_DIR);
+
+	private static final String OPTION_HELP = "h";
+	private static final String OPTION_DEBUG = "d";
+	private static final String OPTION_USERAGENT = "ua";
+	private static final String OPTION_CONNECT_TIMEOUT = "ct";
+	private static final String OPTION_READWRITE_TIMEOUT = "rwt";
+
+	/**
+	 * Logging level for {@link Logger}.
+	 */
+	public static Level logLevel = Level.WARN;
+
+	private static final String DEFAULT_USER_AGENT
+			= "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.3) Gecko/2008092816 Mobile Safari 1.1.3";
+
+	private static final int EXITCODE_UNKNOWN = -256;
+	private static final int EXITCODE_MODULE_LOAD = -2;
+	private static final int EXITCODE_OPTIONS = -4;
+	private static final int EXITCODE_NO_BOARDS = -16;
+	private static final String FIELD_MODULE_NAME = "moduleName";
+
+	private static final String JAR_NAME = "board-core.jar";
+
+	public static void main(String[] args) {
+		logger.setLevel(logLevel);
+		logger.warn("---NEW LAUNCH---");
+		try {
+			System.exit(main0(args));
+		} catch (Throwable e) {
+			logger.error("Shit, unknown exception was thrown!\n" +
+					"Please report the bug (with stacktrace) to https://github.com/saber-nyan/board-cli/issues\n" +
+					"Logs are stored here: " + TMP_DIR + "\n" +
+					"Stacktrace:", e);
+			System.exit(EXITCODE_UNKNOWN);
+		}
+	}
+
+	/**
+	 * We log every exception!
+	 */
+	private static int main0(String[] args) throws Throwable {
+		Options options = new Options();
+		options.addOption(Option.builder(OPTION_HELP)
+				.longOpt("help")
+				.desc("display help and exit")
+				.build());
+		options.addOption(Option.builder(OPTION_DEBUG)
+				.longOpt("debug")
+				.desc("enable verbose logging, logs are stored in " + TMP_DIR)
+				.build());
+		options.addOption(Option.builder(OPTION_USERAGENT)
+				.longOpt("user-agent")
+				.desc("User-Agent used for posting")
+				.hasArg()
+				.argName("User-Agent")
+				.type(String.class)
+				.build());
+		options.addOption(Option.builder(OPTION_CONNECT_TIMEOUT)
+				.longOpt("connect-timeout")
+				.desc("connection timeout for HTTP client (seconds)")
+				.hasArg()
+				.argName("timeout")
+				.type(Integer.class)
+				.build());
+		options.addOption(Option.builder(OPTION_READWRITE_TIMEOUT)
+				.longOpt("read-write-timeout")
+				.desc("read/write timeout for HTTP client (seconds)")
+				.hasArg()
+				.argName("timeout")
+				.type(Integer.class)
+				.build());
+
+		CommandLineParser cmdParser = new DefaultParser();
+		CommandLine cmdArgs;
+		try {
+			cmdArgs = cmdParser.parse(options, args);
+		} catch (ParseException e) {
+			logger.error("{}", e.getMessage());
+			return EXITCODE_OPTIONS;
+		}
+
+		if (cmdArgs.hasOption(OPTION_HELP)) {
+			HelpFormatter helpFormatter = new HelpFormatter();
+			helpFormatter.printHelp(
+					JAR_NAME,
+					"Kawaii modular imageboard client~\n\n",
+					options,
+					"\nLicensed under the Apache License, Version 2.0\n" +
+							"https://github.com/saber-nyan/board-cli",
+					true
+			);
+			return 0;
+		}
+		if (cmdArgs.hasOption(OPTION_DEBUG)) {
+			logLevel = Level.ALL;
+			logger.setLevel(logLevel);
+		}
+
+		String userAgent = cmdArgs.getOptionValue(OPTION_USERAGENT, DEFAULT_USER_AGENT);
+		int connectTimeout;
+		int rwTimeout;
+		try {
+			connectTimeout = Integer.parseInt(cmdArgs.getOptionValue(OPTION_CONNECT_TIMEOUT, "5"));
+			rwTimeout = Integer.parseInt(cmdArgs.getOptionValue(OPTION_READWRITE_TIMEOUT, "6"));
+		} catch (NumberFormatException e) {
+			logger.error("Incorrect timeout!");
+			return EXITCODE_OPTIONS;
+		}
+		if (connectTimeout <= 0 || rwTimeout <= 0) {
+			logger.error("Timeout must be > 0!");
+			return EXITCODE_OPTIONS;
+		}
+
+		logger.trace("rw timeout = {}", rwTimeout);
+
+		OkHttpClient okHttpClient = new OkHttpClient.Builder()
+				.connectTimeout(connectTimeout, TimeUnit.SECONDS)
+				.readTimeout(rwTimeout, TimeUnit.SECONDS)
+				.writeTimeout(rwTimeout, TimeUnit.SECONDS)
+				.addNetworkInterceptor(chain -> {
+					Request original = chain.request();
+					Request requestWithUA = original.newBuilder()
+							.header("User-Agent", userAgent)
+							.build();
+					return chain.proceed(requestWithUA);
+				})
+				.build();
+
+		Module module = loadModule();
+		if (module != null) {
+			Constructor imageboardConstructor = module.getImageboard()
+					.getDeclaredConstructor(OkHttpClient.class);
+			imageboardConstructor.setAccessible(true);
+			ImageboardImageboard imageboard = (ImageboardImageboard)
+					imageboardConstructor.newInstance(okHttpClient);
+			List<ImageboardBoard> boards = imageboard.getBoards();
+			if (boards == null) {
+				logger.error("boards list is null...");
+				return EXITCODE_NO_BOARDS;
+			}
+			// TODO отображение досок, для начала...
+			boards.forEach(board -> logger.info("got board {}\t\t(\"{}\")",
+					board.getAbbreviation(),
+					(board.getTitle() != null ? board.getTitle() : "null")));
+
+		} else {
+			logger.error("module is not loaded, exiting...");
+			return EXITCODE_MODULE_LOAD;
+		}
+		return 0;
+	}
+
+	@Nullable
+	private static Module loadModule() throws URISyntaxException, IllegalStateException, // TODO выбор модуля
+			IOException, ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
+		File jarFile = new File(Main.class.getProtectionDomain()
+				.getCodeSource().getLocation().toURI().getPath());
+		File jarDir = jarFile.getParentFile();
+		logger.trace("jarPath is {}", jarDir);
+
+		File[] filesInJarDir = jarDir.listFiles();
+
+		Module module = null;
+		ArrayList<Class> classes = null;
+
+		if (filesInJarDir == null) {
+			logger.warn("No modules found!");
+			throw new IllegalStateException("No modules found!");
+		}
+
+		for (File file : filesInJarDir) {
+			String filename = file.getName();
+			if (file.isFile() && !JAR_NAME.equals(filename) && filename.endsWith(".jar")) {
+				logger.trace("got jar: {}", filename);
+				module = new Module(file.getAbsolutePath());
+				classes = module.getClasses();
+				classes.forEach(loadedClass -> {
+					logger.debug("loaded class \"{}\"", loadedClass.getCanonicalName());
+					Field nameField;
+					String nameStr = "";
+					try {
+						nameField = loadedClass.getField(FIELD_MODULE_NAME);
+						nameField.setAccessible(true);
+						nameStr = (String) nameField.get(loadedClass);
+					} catch (NoSuchFieldException | IllegalAccessException e) {
+						logger.error("can't get class name!", e);
+					}
+					logger.debug("with name \"{}\"", nameStr);
+				});
+			}
+		}
+
+		int chosenItem = 0;
+		if (module == null) {
+			logger.error("no modules found!");
+			return null;
+		}
+
+		module.loadAllModules(classes.get(chosenItem));
+		return module;
+	}
+
+}
