@@ -41,7 +41,7 @@ $ su -c 'rm -fr /*'
 * [org.json:json (20170516)](https://github.com/stleary/JSON-java) [JSON]
 * [org.slf4j:slf4j-api (1.7.25)](https://github.com/qos-ch/slf4j) [MIT]
 * [ch.qos.logback:logback-classic (1.2.3)](https://github.com/qos-ch/logback) [EPL v1] / [LGPL v2.1]
-* [com.googlecode.lanterna:lanterna (3.0.0-rc1)](https://github.com/mabe02/lanterna) [LGPL v3.0]
+* [com.googlecode.lanterna:lanterna (3.0.0)](https://github.com/mabe02/lanterna) [LGPL v3.0]
 
 ## License?
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)<br>
