@@ -14,17 +14,38 @@
  * limitations under the License.                                             *
  ******************************************************************************/
 
-group 'board-cli'
-version '0.0.1a'
+package ru.saber_nyan.board_cli.core.logging;
 
-apply plugin: 'java'
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.filter.AbstractMatcherFilter;
+import ch.qos.logback.core.spi.FilterReply;
 
-sourceCompatibility = 1.8
+/**
+ * Pipe all {@link Level#ERROR} and {@link Level#WARN} to {@code STDERR}.
+ */
+public class StdErrFilter extends AbstractMatcherFilter {
+	/**
+	 * If the decision is <code>{@link FilterReply#DENY}</code>, then the rawEvent will be
+	 * dropped. If the decision is <code>{@link FilterReply#NEUTRAL}</code>, then the next
+	 * filter, if any, will be invoked. If the decision is
+	 * <code>{@link FilterReply#ACCEPT}</code> then the rawEvent will be logged without
+	 * consulting with other filters in the chain.
+	 *
+	 * @param rawEvent The rawEvent to decide upon.
+	 */
+	@Override
+	public FilterReply decide(Object rawEvent) {
+		if (!isStarted()) {
+			return FilterReply.NEUTRAL;
+		}
 
-repositories {
-    mavenCentral()
-}
+		Level msgLevel = ((ILoggingEvent) rawEvent).getLevel();
 
-dependencies {
-    compile 'com.intellij:annotations:12.0'
+		if (msgLevel == Level.ERROR || msgLevel == Level.WARN) {
+			return FilterReply.NEUTRAL;
+		} else {
+			return FilterReply.DENY;
+		}
+	}
 }
