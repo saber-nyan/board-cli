@@ -1,4 +1,4 @@
-# Contibute?!
+# Contribute?!
 Yep.<br/>
 Who cares? Nobody cares. But...
 
