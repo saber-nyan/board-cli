@@ -9,7 +9,7 @@ Sometimes works on M$&reg; Windows&trade;!
 I agree, only addicts write CLI-projects in Java.
 
 ![Screenshot1](https://i.imgur.com/0bEB430.png)
-![Screenshot2](https://i.imgur.com/CaKREzl.png)
+![Screenshot2](https://i.imgur.com/IWbZgLG.png)
 
 *Try to use it. Try to write a module of your favorite imageboard for it.*
 ## Dependencies?
