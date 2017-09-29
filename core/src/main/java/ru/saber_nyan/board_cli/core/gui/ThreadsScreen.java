@@ -14,17 +14,7 @@
  * limitations under the License.                                             *
  ******************************************************************************/
 
-group 'board-cli'
-version '0.0.1a'
+package ru.saber_nyan.board_cli.core.gui;
 
-apply plugin: 'java'
-
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    compile 'com.intellij:annotations:12.0'
+public class ThreadsScreen {
 }

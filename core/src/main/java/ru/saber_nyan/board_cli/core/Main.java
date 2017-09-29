@@ -29,6 +29,7 @@ import org.apache.commons.cli.*;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.saber_nyan.board_cli.core.gui.BoardsScreen;
 import ru.saber_nyan.board_cli.module.ImageboardBoard;
 import ru.saber_nyan.board_cli.module.ImageboardImageboard;
 
@@ -37,6 +38,7 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -46,10 +48,16 @@ import java.util.concurrent.TimeUnit;
  * Here we go!
  */
 @SuppressWarnings("unchecked")
-final class Main {
+public final class Main {
 
-	private static final String TMP_DIR = System.getProperty("java.io.tmpdir");
-	private static final String VAR_NAME_TMP_DIR = "bcli_logback_log_path";
+	/**
+	 * System temporary directory. We hope it's r/w...
+	 */
+	public static final String TMP_DIR = System.getProperty("java.io.tmpdir");
+	/**
+	 * Logback path variable name.
+	 */
+	public static final String VAR_NAME_TMP_DIR = "bcli_logback_log_path";
 
 	private static final Logger logger;
 
@@ -70,11 +78,18 @@ final class Main {
 
 	private static final String JAR_NAME = "board-core.jar";
 
+	private static MultiWindowTextGUI gui;
+
 	static {
 		System.setProperty(VAR_NAME_TMP_DIR, TMP_DIR);
 		logger = LoggerFactory.getLogger(Main.class);
 	}
 
+	/**
+	 * Catches and reports any exception.
+	 *
+	 * @param args command line arguments
+	 */
 	public static void main(String[] args) {
 		logger.debug("---NEW LAUNCH---");
 		try {
@@ -178,7 +193,8 @@ final class Main {
 		// TERMINAL INIT
 		Screen screen;
 		try {
-			Terminal terminal = new DefaultTerminalFactory().createTerminal();
+			Terminal terminal = new DefaultTerminalFactory(System.out, System.in, Charset.forName("UTF-8"))
+					.createTerminal();
 			screen = new TerminalScreen(terminal);
 			screen.startScreen();
 			logger.debug("term init success");
@@ -196,22 +212,24 @@ final class Main {
 			logger.error("Module loading failed!", e);
 			return EXITCODE_MODULE_LOAD;
 		}
+
 		Constructor imageboardConstructor = module.getImageboard()
 				.getDeclaredConstructor(OkHttpClient.class);
 		imageboardConstructor.setAccessible(true); // Speeds up Reflection
 		ImageboardImageboard imageboard = (ImageboardImageboard)
 				imageboardConstructor.newInstance(okHttpClient);
+		// At this point we got boards list, so display it!
+
 		List<ImageboardBoard> boards = imageboard.getBoards();
 		if (boards == null) {
 			logger.error("boards list is null...");
 			return EXITCODE_NO_BOARDS;
 		}
-		// TODO отображение досок, для начала...
-		boards.forEach(board -> logger.info("got board {}\t\t(\"{}\")",
-				board.getAbbreviation(),
-				(board.getTitle() != null ? board.getTitle() : "null")));
 
-		return 0; // Success!
+		BoardsScreen boardsScreen = new BoardsScreen(boards, gui);
+		boardsScreen.draw();
+
+		return 0; // TODO: Loop?
 	}
 
 	@NotNull
@@ -260,7 +278,7 @@ final class Main {
 		}
 		modulesRadioBoxList.setCheckedItemIndex(0);
 
-		MultiWindowTextGUI gui = new MultiWindowTextGUI(screen, new DefaultWindowManager(), new EmptySpace());
+		gui = new MultiWindowTextGUI(screen, new DefaultWindowManager(), new EmptySpace());
 //		gui.setTheme(SimpleTheme.makeTheme()); // TODO: customization
 		gui.setTheme(new SimpleTheme(TextColor.ANSI.WHITE, TextColor.ANSI.DEFAULT));
 
@@ -277,6 +295,7 @@ final class Main {
 
 		// Wait until user click "OK"...
 
+		window.close();
 		int chosenItem = modulesRadioBoxList.getCheckedItemIndex();
 
 
