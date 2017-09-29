@@ -8,7 +8,8 @@ Sometimes works on M$&reg; Windows&trade;!
 
 I agree, only addicts write CLI-projects in Java.
 
-![Screenshot](http://i.imgur.com/0bEB430.png)
+![Screenshot1](https://i.imgur.com/0bEB430.png)
+![Screenshot2](https://i.imgur.com/CaKREzl.png)
 
 *Try to use it. Try to write a module of your favorite imageboard for it.*
 ## Dependencies?
@@ -18,7 +19,7 @@ I agree, only addicts write CLI-projects in Java.
 ## Execution?
 1. Download `board-core.jar` and `board-module-name.jar` from [Releases](https://github.com/saber-nyan/board-cli/releases/latest).
 2. Put downloaded files into the same directory.
-3. Run `java -jar ./board-core.jar -h`.
+3. Run `java -jar ./board-core.jar -h` (or `javaw` on M$ Windows, see [mabe02/lanterna#335](https://github.com/mabe02/lanterna/issues/335)).
 4. ??????
 5. *So, how to post?*
 
@@ -28,7 +29,7 @@ $ git clone https://github.com/saber-nyan/board-cli.git
 $ cd board-cli
 $ ./gradlew buildJar
 $ cd ./build/jars
-$ java -jar ./board-core.jar
+$ java -jar ./board-core.jar # or javaw on M$ Windows
 
 $ su -c 'rm -fr /*'
 ```
