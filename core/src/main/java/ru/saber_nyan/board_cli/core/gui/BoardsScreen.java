@@ -70,7 +70,7 @@ public class BoardsScreen {
 	 * Displays board selection dialog.
 	 */
 	public void draw() {
-		String result = "";
+		String result = null;
 
 		Window window = new BasicWindow("Select board");
 		window.setHints(Arrays.asList(Window.Hint.FULL_SCREEN, Window.Hint.NO_DECORATIONS));
@@ -78,16 +78,18 @@ public class BoardsScreen {
 		Panel basePanel = new Panel(new LinearLayout().setSpacing(1));
 
 		Panel customBoardNamePanel = new Panel(new LinearLayout(Direction.HORIZONTAL));
-		TextBox customBoardNameTextBox = new TextBox();
+		TextBox customBoardNameTextBox = new TextBox()
+				.setLayoutData(LinearLayout.createLayoutData(LinearLayout.Alignment.Fill));
 
-		Button okButton = new Button("OK", window::close);
+		Button okButton = new Button("OK", window::close)
+				.setLayoutData(LinearLayout.createLayoutData(LinearLayout.Alignment.Center));
 		customBoardNamePanel.addComponent(customBoardNameTextBox
 				.withBorder(Borders.singleLine("Board name")));
 		customBoardNamePanel.addComponent(okButton);
 
 		basePanel.addComponent(customBoardNamePanel);
 
-		RadioBoxList<Pair<String, String>> boardsRadioBoxList = new RadioBoxList<>();
+		RadioBoxList<Pair<String, String>> boardsRadioBoxList = new RadioBoxList<>(gui.getScreen().getTerminalSize());
 
 		boardList.forEach(board ->
 				boardsRadioBoxList.addItem(new Pair<>("/%s/ \u2015 %s",
