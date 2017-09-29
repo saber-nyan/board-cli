@@ -23,7 +23,10 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
-class Module {
+/**
+ * Second {@link ModuleLoader} part: {@link sun.reflect.Reflection}!
+ */
+public class Module {
 
 	private final String path;
 	private Class imageboard;

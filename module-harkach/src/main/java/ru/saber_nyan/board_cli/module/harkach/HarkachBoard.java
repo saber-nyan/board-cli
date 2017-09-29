@@ -45,6 +45,8 @@ public class HarkachBoard extends ImageboardBoard {
 	private static final String KEY_BOARD_BUMP_LIMIT = "bump_limit";
 	private static final String KEY_BOARD_THREADS = "threads";
 	private static final String KEY_BOARD_THREAD_NUM = "thread_num";
+	private static final String KEY_THREAD_POSTS = "posts";
+	private static final String KEY_THREAD_SUBJECT = "subject";
 
 	/**
 	 * To load the tread, use {@link #load()}!
@@ -105,9 +107,11 @@ public class HarkachBoard extends ImageboardBoard {
 				throw new JSONException("Cast to JSONObject failed!");
 			}
 
+			String threadTitle = threadJson.getJSONArray(KEY_THREAD_POSTS).getJSONObject(0)
+					.optString(KEY_THREAD_SUBJECT, null);
 			ImageboardThread imageboardThread = new HarkachThread(
 					getAbbreviation(),
-					"TODO title!", //TODO
+					threadTitle,
 					threadJson.getLong(KEY_BOARD_THREAD_NUM),
 					getOkHttpClient()
 			);

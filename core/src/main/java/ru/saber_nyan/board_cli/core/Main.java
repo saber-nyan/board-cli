@@ -74,6 +74,7 @@ public final class Main {
 	private static final int EXITCODE_OPTIONS = -4;
 	private static final int EXITCODE_TERMINAL = -16;
 	private static final int EXITCODE_NO_BOARDS = -32;
+	private static final int EXITCODE_MODULE_INIT = -64;
 	private static final String FIELD_MODULE_NAME = "moduleName";
 
 	private static final String JAR_NAME = "board-core.jar";
@@ -226,8 +227,14 @@ public final class Main {
 			return EXITCODE_NO_BOARDS;
 		}
 
-		BoardsScreen boardsScreen = new BoardsScreen(boards, gui);
-		boardsScreen.draw();
+		BoardsScreen boardsScreen = new BoardsScreen(boards, gui,
+				module, okHttpClient);
+		try {
+			boardsScreen.draw();
+		} catch (Throwable e) {
+			logger.error("Module init fail", e);
+			return EXITCODE_MODULE_INIT;
+		}
 
 		return 0; // TODO: Loop?
 	}
