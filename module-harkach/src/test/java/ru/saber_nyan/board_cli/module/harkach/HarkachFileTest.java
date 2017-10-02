@@ -43,12 +43,20 @@ public class HarkachFileTest {
 		put("path", FILE_URL);
 	}};
 
+	private static final Map<String, Object> inFile1 = new HashMap<String, Object>() {{
+		put("fullname", FILE_NAME);
+		put("path", FILE_URL);
+	}};
+
 	@Test
 	public void construct() throws Exception {
 		JSONObject input = new JSONObject(inFile);
 		ImageboardFile file = new HarkachFile(input, new OkHttpClient());
 		assertEquals("file names don\'t match", FILE_NAME, file.getFilename());
 		assertEquals("file URLs don\'t match", "https://2ch.hk" + FILE_URL, file.getUrl());
+		JSONObject input1 = new JSONObject(inFile1);
+		ImageboardFile file1 = new HarkachFile(input1, new OkHttpClient());
+		assertEquals("file names don\'t match", FILE_NAME, file1.getFilename());
 	}
 
 	@Test

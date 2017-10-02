@@ -84,15 +84,23 @@ task jacoco(type: JacocoReport) {
     classDirectories = files(subprojects.sourceSets.main.output)
     //noinspection GroovyAssignabilityCheck
     executionData = files(subprojects.jacocoTestReport.executionData)
+    //noinspection GrUnresolvedAccess
     reports {
+        //noinspection GrUnresolvedAccess
         html.enabled = true
+        //noinspection GrUnresolvedAccess
         xml.enabled = true
+        //noinspection GrUnresolvedAccess
+        xml.destination "${buildDir}/reports/jacoco/report.xml"
+        //noinspection GrUnresolvedAccess
         csv.enabled = false
     }
     onlyIf = {
         true
     }
+    //noinspection GrUnresolvedAccess
     doFirst {
+        //noinspection GrUnresolvedAccess
         executionData = files(executionData.findAll {
             it.exists()
         })
@@ -111,3 +119,5 @@ task runJar() {
         }
     }
 }
+
+check.dependsOn this.tasks.jacoco

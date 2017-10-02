@@ -44,6 +44,10 @@ public class HarkachBoardTest {
 		List<ImageboardThread> threads = board.getThreads();
 		assertNotNull("threads list is not loaded...", threads);
 		assertTrue("the first thread has an invalid number", threads.get(0).getNumber() > 0);
+
+		ImageboardBoard board1 = new HarkachBoard("s", 1, "Loled!",
+				new OkHttpClient());
+		board1.load();
 	}
 
 	@Test(expected = IllegalStateException.class)

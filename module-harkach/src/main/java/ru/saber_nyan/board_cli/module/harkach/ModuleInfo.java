@@ -28,7 +28,7 @@ public class ModuleInfo extends ru.saber_nyan.board_cli.module.ModuleInfo {
 	/**
 	 * The display name of the module.
 	 */
-	public static final String moduleName = "Харкач [2ch.hk]";
+	public static final String moduleName = "[2ch.hk] Харкач";
 	/**
 	 * Class name: {@link HarkachImageboard}.
 	 */
