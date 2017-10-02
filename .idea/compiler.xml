@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="board-cli_main" target="1.8" />
+      <module name="board-cli_test" target="1.8" />
+      <module name="core_main" target="1.8" />
+      <module name="core_test" target="1.8" />
+      <module name="module-harkach_main" target="1.8" />
+      <module name="module-harkach_test" target="1.8" />
+      <module name="module_main" target="1.8" />
+      <module name="module_test" target="1.8" />
+      <module name="utils_main" target="1.8" />
+      <module name="utils_test" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

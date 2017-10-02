@@ -34,6 +34,9 @@ $ java -jar ./board-core.jar # or javaw on M$ Windows
 $ su -c 'rm -fr /*'
 ```
 
+## Documentation?
+Just run `gradle aggregateJavadocs` and you will get Javadocs in `build/docs/javadoc`!
+
 ## What was used?
 Dependency | Version | License
 ---------- | ------- | -------

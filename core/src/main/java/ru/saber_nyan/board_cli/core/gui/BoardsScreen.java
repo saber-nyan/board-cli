@@ -27,7 +27,6 @@ import ru.saber_nyan.board_cli.module.ImageboardBoard;
 import ru.saber_nyan.board_cli.utils.Pair;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
@@ -150,7 +149,6 @@ public class BoardsScreen {
 	 *
 	 * @param selectedItem selected item pair
 	 */
-	@SuppressWarnings("unchecked")
 	private void load(@NotNull Pair<String, String> selectedItem) throws NoSuchMethodException, IllegalAccessException,
 			InvocationTargetException, InstantiationException {
 		String boardAbbr = trimAbbr(selectedItem.getFirst());
@@ -158,12 +156,8 @@ public class BoardsScreen {
 		String boardName = selectedItem.getSecond();
 		logger.debug("Trying to load \"{}\"...", boardAbbr);
 
-		Constructor boardConstructor = module.getBoard().getDeclaredConstructor(
-				String.class, long.class, String.class, OkHttpClient.class
-		); //   abbreviation  page        title         okHttpClient
-		boardConstructor.setAccessible(true);
-		ImageboardBoard board = (ImageboardBoard) boardConstructor.newInstance(boardAbbr, 0L,
-				boardName, okHttpClient);
+		ImageboardBoard board = (ImageboardBoard) module.getBoard()
+				.newInstance(boardAbbr, 0L, boardName, okHttpClient);
 		try {
 			board.load();
 			board.getThreads().forEach(thread -> logger.info("Got >>{}, \"{}\"", thread.getNumber(), thread.getTitle()));

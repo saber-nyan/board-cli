@@ -35,7 +35,6 @@ import ru.saber_nyan.board_cli.module.ImageboardImageboard;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
@@ -47,7 +46,6 @@ import java.util.concurrent.TimeUnit;
 /**
  * Here we go!
  */
-@SuppressWarnings("unchecked")
 public final class Main {
 
 	/**
@@ -214,11 +212,9 @@ public final class Main {
 			return EXITCODE_MODULE_LOAD;
 		}
 
-		Constructor imageboardConstructor = module.getImageboard()
-				.getDeclaredConstructor(OkHttpClient.class);
-		imageboardConstructor.setAccessible(true); // Speeds up Reflection
+
 		ImageboardImageboard imageboard = (ImageboardImageboard)
-				imageboardConstructor.newInstance(okHttpClient);
+				module.getImageboard().newInstance(okHttpClient);
 		// At this point we got boards list, so display it!
 
 		List<ImageboardBoard> boards = imageboard.getBoards();
@@ -241,7 +237,8 @@ public final class Main {
 
 	@NotNull
 	private static Module loadModule(Screen screen) throws URISyntaxException, IOException,
-			ClassNotFoundException, NoSuchFieldException, IllegalAccessException, RuntimeException {
+			ClassNotFoundException, NoSuchFieldException, IllegalAccessException,
+			RuntimeException, NoSuchMethodException {
 		File jarFile = new File(Main.class.getProtectionDomain()
 				.getCodeSource().getLocation().toURI().getPath());
 		File jarDir = jarFile.getParentFile();

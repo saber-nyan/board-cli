@@ -18,8 +18,19 @@ group 'board-cli'
 version '0.0.1a'
 
 apply plugin: 'java'
+apply plugin: 'nebula-aggregate-javadocs'
 
 sourceCompatibility = 1.8
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.netflix.nebula:gradle-aggregate-javadocs-plugin:3.0.1'
+    }
+}
 
 repositories {
     mavenLocal()
@@ -29,11 +40,65 @@ repositories {
 dependencies {
 }
 
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
+    repositories {
+        jcenter()
+    }
+}
+
 task buildJar() {
     dependsOn(buildDependents)
     dependsOn(':core:jar')
     dependsOn(':module-harkach:jar')
 }
+
+subprojects {
+    dependencies {
+        testCompile 'junit:junit:4.12'
+    }
+
+    jacocoTestReport {
+        additionalSourceDirs = files(sourceSets.main.allSource.srcDirs)
+        sourceDirectories = files(sourceSets.main.allSource.srcDirs)
+        classDirectories =  files(sourceSets.main.output)
+        reports {
+            html.enabled = true
+            xml.enabled = true
+            csv.enabled = false
+        }
+    }
+
+    buildJar.dependsOn test
+}
+
+//noinspection GroovyAssignabilityCheck
+task jacoco(type: JacocoReport) {
+    dependsOn = subprojects.test
+    //noinspection GroovyAssignabilityCheck
+    additionalSourceDirs = files(subprojects.sourceSets.main.allSource.srcDirs)
+    //noinspection GroovyAssignabilityCheck
+    sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
+    //noinspection GroovyAssignabilityCheck
+    classDirectories = files(subprojects.sourceSets.main.output)
+    //noinspection GroovyAssignabilityCheck
+    executionData = files(subprojects.jacocoTestReport.executionData)
+    reports {
+        html.enabled = true
+        xml.enabled = true
+        csv.enabled = false
+    }
+    onlyIf = {
+        true
+    }
+    doFirst {
+        executionData = files(executionData.findAll {
+            it.exists()
+        })
+    }
+}
+
 
 task runJar() {
     dependsOn(buildJar)
@@ -41,7 +106,7 @@ task runJar() {
         javaexec {
             main = "-jar"
             args = [
-                    "${rootDir}/build/jars/board-core.jar"
+                    "${buildDir}/jars/board-core.jar"
             ]
         }
     }

@@ -16,6 +16,8 @@
 
 package ru.saber_nyan.board_cli.utils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -40,7 +42,8 @@ public final class ModuleLoader {
 	 * @throws IOException            if an I/O error has occurred
 	 * @throws ClassNotFoundException (will never happen) if wrong class name selected
 	 */
-	public static ArrayList<Class> loadClassesFromJar(String path, String loadIfNameContains)
+	public static ArrayList<Class> loadClassesFromJar(@NotNull String path,
+													  @NotNull String loadIfNameContains)
 			throws IOException, ClassNotFoundException {
 		JarFile jarFile = new JarFile(path);
 		Enumeration<JarEntry> entryEnumeration = jarFile.entries();

@@ -16,7 +16,6 @@
 
 package ru.saber_nyan.board_cli.module.harkach;
 
-import ch.qos.logback.classic.Logger;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -24,7 +23,6 @@ import okhttp3.ResponseBody;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.LoggerFactory;
 import ru.saber_nyan.board_cli.module.ImageboardFile;
 import ru.saber_nyan.board_cli.utils.HttpException;
 
@@ -40,11 +38,9 @@ import java.io.IOException;
 @SuppressWarnings("WeakerAccess")
 public class HarkachFile extends ImageboardFile {
 
-	private static final Logger logger = (Logger) LoggerFactory.getLogger(HarkachFile.class);
-
 	private static final String API_URL = "https://2ch.hk";
-	private static final String TMP_DIR = System.getProperty("java.io.tmpdir");
 	private static final String KEY_FILE_NAME = "fullname";
+	private static final String KEY_FILE_NAME_ALT = "name";
 	private static final String KEY_FILE_HEIGHT = "height";
 	private static final String KEY_FILE_WIDTH = "width";
 	private static final String KEY_FILE_DOWNLOAD_URL = "path";
@@ -63,9 +59,21 @@ public class HarkachFile extends ImageboardFile {
 					   @NotNull OkHttpClient okHttpClient) throws JSONException {
 		super(file, okHttpClient);
 
-		setFilename(file.getString(KEY_FILE_NAME));
-		setHeight((Long) file.opt(KEY_FILE_HEIGHT));
-		setWidth((Long) file.opt(KEY_FILE_WIDTH));
+		String filename = file.optString(KEY_FILE_NAME, null);
+		if (filename == null) {
+			filename = file.getString(KEY_FILE_NAME_ALT);
+		}
+		setFilename(filename);
+
+		Object h = file.opt(KEY_FILE_HEIGHT);
+		if (h != null) {
+			setHeight((long) (int) h);
+		}
+
+		Object w = file.opt(KEY_FILE_WIDTH);
+		if (w != null) {
+			setWidth((long) (int) w);
+		}
 		setUrl(API_URL + file.getString(KEY_FILE_DOWNLOAD_URL));
 	}
 
@@ -82,7 +90,6 @@ public class HarkachFile extends ImageboardFile {
 	@Override
 	public String load(@NotNull String pathToSave) throws IllegalStateException, IOException {
 		super.load(pathToSave);
-		logger.debug("selected {} for temp dir!", TMP_DIR);
 		Request request = new Request.Builder()
 				.url(getUrl())
 				.get()
@@ -93,11 +100,10 @@ public class HarkachFile extends ImageboardFile {
 			throw new HttpException(response.code());
 		}
 
-		String outFilePath = TMP_DIR + File.separator + getFilename();
+		String outFilePath = pathToSave + File.separator + getFilename();
 		try (FileOutputStream outputStream = new FileOutputStream(outFilePath)) {
 			outputStream.write(body.bytes());
 		}
-		logger.debug("loaded to {}" + outFilePath);
 		return outFilePath;
 	}
 }

@@ -30,7 +30,7 @@ import static ru.saber_nyan.board_cli.core.Main.VAR_NAME_TMP_DIR;
 /**
  * Threads list GUI.
  * <p>
- * When thread is selected, displays {@link PostsScreen}.
+ * When thread is selected, displays TODO.
  */
 public class ThreadsScreen {
 
