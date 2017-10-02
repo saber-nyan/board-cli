@@ -1,0 +1,26 @@
+language: java
+
+sudo: false
+
+jdk:
+  - openjdk8
+  - oraclejdk8
+  - openjdk9
+  - oraclejdk9
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
+notifications:
+  email:
+    recipients:
+      - saber-nyan@ya.ru
+
+git:
+  depth: 3
