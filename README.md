@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/saber-nyan/board-cli.svg?branch=master)](https://travis-ci.org/saber-nyan/board-cli)
+[![codecov](https://codecov.io/gh/saber-nyan/board-cli/branch/master/graph/badge.svg)](https://codecov.io/gh/saber-nyan/board-cli)
 [![Star this repo](http://githubbadges.com/star.svg?user=saber-nyan&repo=board-cli&style=flat)](https://github.com/saber-nyan/board-cli)
 [![Fork this repo](http://githubbadges.com/fork.svg?user=saber-nyan&repo=board-cli&style=flat)](https://github.com/saber-nyan/board-cli/fork)
 [![Issues](https://img.shields.io/github/issues/saber-nyan/board-cli.svg)](https://github.com/saber-nyan/board-cli/issues)
