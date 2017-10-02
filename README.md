@@ -4,6 +4,7 @@
 [![Issues](https://img.shields.io/github/issues/saber-nyan/board-cli.svg)](https://github.com/saber-nyan/board-cli/issues)
 [![Release](http://github-release-version.herokuapp.com/github/saber-nyan/board-cli/release.svg?style=flat)](https://github.com/saber-nyan/board-cli/releases/latest)
 # board-cli
+*Inspired by [bcskda/2ch-cli](https://github.com/bcskda/2ch-cli)*<br/>
 Console modular imageboard client.<br/>
 Sometimes works on M$&reg; Windows&trade;!
 
