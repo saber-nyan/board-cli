@@ -14,7 +14,7 @@
  * limitations under the License.                                             *
  ******************************************************************************/
 
-package ru.saber_nyan.board_cli.utils;
+package ru.saber_nyan.board_cli.core;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -22,16 +22,17 @@ import okhttp3.Response;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import ru.saber_nyan.board_cli.module.ImageboardBoard;
+import ru.saber_nyan.board_cli.module.ImageboardImageboard;
+import ru.saber_nyan.board_cli.module.ImageboardThread;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.List;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 
 @SuppressWarnings("JavaDoc")
-public class ModuleLoaderTest {
+public class ModuleTest {
 
 	private static final String DOWNLOAD_URL = "https://github.com/saber-nyan/board-cli/releases/download/" +
 			"v0.0.1b/board-module-harkach.jar";
@@ -53,10 +54,31 @@ public class ModuleLoaderTest {
 	}
 
 	@Test
-	public void loadClassesFromJar() throws Exception {
-		List<Class> classes = ModuleLoader.loadClassesFromJar(FILE_PATH, "saber_nyan");
-		assertNotNull("classes list is null", classes);
-		assertFalse("classes list is empty", classes.isEmpty());
+	public void construct() throws Exception {
+		Module module = new Module(FILE_PATH);
+		assertFalse("classes list is empty", module.getClasses().isEmpty());
+	}
+
+	@SuppressWarnings("ConstantConditions")
+	@Test
+	public void loadAllModules() throws Exception {
+		OkHttpClient client = new OkHttpClient();
+		Module module = new Module(FILE_PATH);
+		module.loadAllModules(module.getClasses().get(0));
+		ImageboardImageboard imageboard =
+				(ImageboardImageboard) module.getImageboard().newInstance(client);
+		assertFalse("boards list fail (empty)", imageboard.getBoards().isEmpty());
+
+		ImageboardBoard board =
+				(ImageboardBoard) module.getBoard().newInstance("s", 0L, "Untitled", client);
+		board.load();
+		assertFalse("threads list fail (empty)", board.getThreads().isEmpty());
+
+		//noinspection unused
+		ImageboardThread thread =
+				(ImageboardThread) module.getThread().newInstance("abu", null, 42375L, client);
+//		thread.load(); // FIXME: Fukken weird bug! JSONException: JSONObject["fullname"] not found. at (HarkachFile.java:66)
+//		assertFalse("posts list fail (empty)", thread.getPosts().isEmpty());
 
 	}
 

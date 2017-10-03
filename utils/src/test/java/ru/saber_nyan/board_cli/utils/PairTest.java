@@ -64,6 +64,7 @@ public class PairTest {
 	@SuppressWarnings({"EqualsWithItself", "EqualsBetweenInconvertibleTypes"})
 	@Test
 	public void equals_test() throws Exception {
+		//noinspection LiteralAsArgToStringEquals
 		assertFalse("equals with other type", pair.equals("lol\'d"));
 		assertTrue("same object not equal", pair.equals(pair));
 

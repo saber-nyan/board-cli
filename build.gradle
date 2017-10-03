@@ -19,16 +19,21 @@ version '0.0.1a'
 
 apply plugin: 'java'
 apply plugin: 'nebula-aggregate-javadocs'
+apply plugin: "com.dorongold.task-tree"
 
 sourceCompatibility = 1.8
 
 buildscript {
     repositories {
         jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
 
     dependencies {
         classpath 'com.netflix.nebula:gradle-aggregate-javadocs-plugin:3.0.1'
+        classpath "gradle.plugin.com.dorongold.plugins:task-tree:1.3"
     }
 }
 
@@ -40,21 +45,19 @@ repositories {
 dependencies {
 }
 
+jar {
+    dependsOn(':core:jar')
+    dependsOn(':module-harkach:jar')
+}
+
 allprojects {
     apply plugin: 'java'
     apply plugin: 'jacoco'
     repositories {
         jcenter()
+        mavenLocal()
+        mavenCentral()
     }
-}
-
-task buildJar() {
-    dependsOn(buildDependents)
-    dependsOn(':core:jar')
-    dependsOn(':module-harkach:jar')
-}
-
-subprojects {
     dependencies {
         testCompile 'junit:junit:4.12'
     }
@@ -70,7 +73,7 @@ subprojects {
         }
     }
 
-    buildJar.dependsOn test
+    jar.dependsOn test
 }
 
 //noinspection GroovyAssignabilityCheck
@@ -107,17 +110,5 @@ task jacoco(type: JacocoReport) {
     }
 }
 
-
-task runJar() {
-    dependsOn(buildJar)
-    doLast {
-        javaexec {
-            main = "-jar"
-            args = [
-                    "${buildDir}/jars/board-core.jar"
-            ]
-        }
-    }
-}
-
 check.dependsOn this.tasks.jacoco
+jar.dependsOn check
