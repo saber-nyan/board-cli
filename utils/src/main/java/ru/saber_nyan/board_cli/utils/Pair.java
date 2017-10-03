@@ -92,7 +92,7 @@ public class Pair<FIRST, SECOND> {
 			boolean firstEquals = (this.first == other.first ||
 					Objects.equals(this.first, other.first));
 			boolean secondEquals = (this.second == other.second ||
-					Objects.equals(this.first, other.first));
+					Objects.equals(this.second, other.second));
 			return firstEquals && secondEquals;
 		} else {
 			return false;
@@ -101,13 +101,6 @@ public class Pair<FIRST, SECOND> {
 
 	@Override
 	public String toString() {
-//		//noinspection StringBufferReplaceableByString slower!
-//		return new StringBuilder("(")
-//				.append(first)
-//				.append(", ")
-//				.append(second)
-//				.append(")")
-//				.toString();
 		return String.format(toStringFormat, first, second);
 	}
 }

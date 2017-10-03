@@ -14,19 +14,22 @@
  * limitations under the License.                                             *
  ******************************************************************************/
 
-group 'board-cli'
-version '0.0.1a'
+package ru.saber_nyan.board_cli.core.logging;
 
-apply plugin: 'java'
+import ch.qos.logback.core.spi.FilterReply;
+import org.junit.Test;
 
-sourceCompatibility = 1.8
+import static org.junit.Assert.assertEquals;
 
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    testCompile 'com.squareup.okhttp3:okhttp:3.9.0'
-
-    compile 'com.intellij:annotations:12.0'
+@SuppressWarnings("JavaDoc")
+public class AnyFilterTest {
+	@Test
+	public void decide() throws Exception {
+		AnyFilter filter = new AnyFilter();
+		FilterReply reply = filter.decide("lol");
+		assertEquals("wrong decision", FilterReply.NEUTRAL, reply);
+		filter.start();
+		FilterReply reply1 = filter.decide("lold");
+		assertEquals("wrong decision", FilterReply.ACCEPT, reply1);
+	}
 }

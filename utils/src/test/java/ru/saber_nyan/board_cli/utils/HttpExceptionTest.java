@@ -14,19 +14,20 @@
  * limitations under the License.                                             *
  ******************************************************************************/
 
-group 'board-cli'
-version '0.0.1a'
+package ru.saber_nyan.board_cli.utils;
 
-apply plugin: 'java'
+import org.junit.Test;
 
-sourceCompatibility = 1.8
+import static org.junit.Assert.assertEquals;
 
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    testCompile 'com.squareup.okhttp3:okhttp:3.9.0'
-
-    compile 'com.intellij:annotations:12.0'
+@SuppressWarnings("JavaDoc")
+public class HttpExceptionTest {
+	@Test(expected = HttpException.class)
+	public void getResponseCode() throws Exception {
+		HttpException exception = new HttpException("fail!", 404);
+		HttpException exception1 = new HttpException(500);
+		assertEquals("responseCode not equal", 404, exception.getResponseCode());
+		assertEquals("responseCode not equal", 500, exception1.getResponseCode());
+		throw exception;
+	}
 }

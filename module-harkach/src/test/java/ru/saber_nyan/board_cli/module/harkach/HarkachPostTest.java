@@ -50,9 +50,19 @@ public class HarkachPostTest {
 	private static final List<JSONObject> inFiles = Collections.singletonList(new JSONObject(inFile));
 	private static final Map<String, Object> inMap = new HashMap<String, Object>() {{
 		put("num", NUMBER);
+		put("banned", 1);
+		put("op", 1);
 		put("comment", COMMENT);
 		put("date", DATE);
 		put("files", new JSONArray(inFiles));
+	}};
+
+	private static final Map<String, Object> inMap1 = new HashMap<String, Object>() {{
+		put("num", NUMBER);
+		put("banned", 1);
+		put("op", 1);
+		put("comment", COMMENT);
+		put("date", DATE);
 	}};
 
 	@Test
@@ -62,6 +72,8 @@ public class HarkachPostTest {
 		assertEquals("numbers don\'t match", NUMBER, post.getNumber());
 		assertEquals("comments don\'t match", COMMENT, post.getComment());
 		assertEquals("dates don\'t match", DATE, post.getDate());
+		assertEquals("post isn\'t banned", post.isBanned(), true);
+		assertEquals("post isn\'t OP", post.isOp(), true);
 
 		List<ImageboardFile> files = post.getFiles();
 		assertNotNull("files list is null", files);
@@ -70,5 +82,9 @@ public class HarkachPostTest {
 		ImageboardFile file = files.get(0);
 		assertEquals("file names don\'t match", FILE_NAME, file.getFilename());
 		assertEquals("file URLs don\'t match", "https://2ch.hk" + FILE_URL, file.getUrl());
+
+		JSONObject input1 = new JSONObject(inMap1);
+		ImageboardPost post1 = new HarkachPost(input1, new OkHttpClient());
+		assertNull("file list isn\'t null", post1.getFiles());
 	}
 }

@@ -14,19 +14,31 @@
  * limitations under the License.                                             *
  ******************************************************************************/
 
-group 'board-cli'
-version '0.0.1a'
+package ru.saber_nyan.board_cli.core.logging;
 
-apply plugin: 'java'
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.spi.LoggingEvent;
+import ch.qos.logback.core.spi.FilterReply;
+import org.junit.Test;
 
-sourceCompatibility = 1.8
+import static org.junit.Assert.assertEquals;
 
-repositories {
-    mavenCentral()
-}
+@SuppressWarnings("JavaDoc")
+public class StdOutFilterTest {
+	@Test
+	public void decide() throws Exception {
+		StdOutFilter filterNotStarted = new StdOutFilter();
+		assertEquals("wrong decision", FilterReply.NEUTRAL, filterNotStarted.decide(132));
 
-dependencies {
-    testCompile 'com.squareup.okhttp3:okhttp:3.9.0'
+		StdOutFilter filter = new StdOutFilter();
+		filter.start();
 
-    compile 'com.intellij:annotations:12.0'
+		LoggingEvent event = new LoggingEvent();
+		event.setLevel(Level.INFO);
+		assertEquals("wrong decision", FilterReply.NEUTRAL, filter.decide(event));
+
+		LoggingEvent event1 = new LoggingEvent();
+		event1.setLevel(Level.ERROR);
+		assertEquals("wrong decision", FilterReply.DENY, filter.decide(event1));
+	}
 }
