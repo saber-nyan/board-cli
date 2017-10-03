@@ -1,7 +1,5 @@
 [![Build Status](https://travis-ci.org/saber-nyan/board-cli.svg?branch=master)](https://travis-ci.org/saber-nyan/board-cli)
 [![codecov](https://codecov.io/gh/saber-nyan/board-cli/branch/master/graph/badge.svg)](https://codecov.io/gh/saber-nyan/board-cli)
-[![Star this repo](http://githubbadges.com/star.svg?user=saber-nyan&repo=board-cli&style=flat)](https://github.com/saber-nyan/board-cli)
-[![Fork this repo](http://githubbadges.com/fork.svg?user=saber-nyan&repo=board-cli&style=flat)](https://github.com/saber-nyan/board-cli/fork)
 [![Issues](https://img.shields.io/github/issues/saber-nyan/board-cli.svg)](https://github.com/saber-nyan/board-cli/issues)
 [![Release](http://github-release-version.herokuapp.com/github/saber-nyan/board-cli/release.svg?style=flat)](https://github.com/saber-nyan/board-cli/releases/latest)
 # board-cli
@@ -14,7 +12,6 @@ I agree, only addicts write CLI-projects in Java.
 ![Screenshot1](https://i.imgur.com/0bEB430.png)
 ![Screenshot2](https://i.imgur.com/IWbZgLG.png)
 
-*Try to use it. Try to write a module of your favorite imageboard for it.*
 ## Dependencies?
 * **Java**>=1.8, Oracle or OpenJDK (icedtea)
 * (Optionally) **IntelliJ IDEA** for easy development
@@ -30,7 +27,7 @@ I agree, only addicts write CLI-projects in Java.
 ```
 $ git clone https://github.com/saber-nyan/board-cli.git
 $ cd board-cli
-$ ./gradlew buildJar
+$ ./gradlew jar
 $ cd ./build/jars
 $ java -jar ./board-core.jar # or javaw on M$ Windows
 
