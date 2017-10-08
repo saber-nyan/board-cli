@@ -61,7 +61,7 @@ public abstract class ImageboardBoard {
 	/**
 	 * Is {@link #load()} called?
 	 */
-	private boolean isLoaded = false;
+	private final boolean isLoaded = false;
 	/**
 	 * HTTP client.
 	 */
@@ -176,16 +176,11 @@ public abstract class ImageboardBoard {
 	/**
 	 * Loads entire board, creates {@link ImageboardThread} objects.
 	 *
-	 * @throws IllegalStateException if thread is already loaded
 	 * @throws IOException           if GET request failed
 	 *                               (try to cast to {@code utils.HttpException} first!)
 	 * @throws JSONException         if received JSON is invalid
 	 */
-	public void load() throws IllegalStateException, IOException, JSONException {
-		if (isLoaded) {
-			throw new IllegalStateException("Board is already loaded!");
-		} else {
-			this.isLoaded = true;
-		}
+	public void load() throws IOException, JSONException {
+		// does nothing, but if I make this method abstract I'll get AbstractMethodError.
 	}
 }

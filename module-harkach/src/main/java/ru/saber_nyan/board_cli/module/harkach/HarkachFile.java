@@ -59,21 +59,20 @@ public class HarkachFile extends ImageboardFile {
 					   @NotNull OkHttpClient okHttpClient) throws JSONException {
 		super(file, okHttpClient);
 
-		String filename = file.optString(KEY_FILE_NAME, null);
-		if (filename == null) {
-			filename = file.getString(KEY_FILE_NAME_ALT);
-		}
-		setFilename(filename);
-
-		Object h = file.opt(KEY_FILE_HEIGHT);
-		if (h != null) {
-			setHeight((long) (int) h);
+		if (file.has(KEY_FILE_NAME)) {
+			setFilename(file.getString(KEY_FILE_NAME));
+		} else {
+			setFilename(file.getString(KEY_FILE_NAME_ALT));
 		}
 
-		Object w = file.opt(KEY_FILE_WIDTH);
-		if (w != null) {
-			setWidth((long) (int) w);
+		if (file.has(KEY_FILE_HEIGHT)) {
+			setHeight((long) (int) file.get(KEY_FILE_HEIGHT));
 		}
+
+		if (file.has(KEY_FILE_WIDTH)) {
+			setWidth((long) (int) file.get(KEY_FILE_WIDTH));
+		}
+
 		setUrl(API_URL + file.getString(KEY_FILE_DOWNLOAD_URL));
 	}
 

@@ -18,5 +18,6 @@
     <orderEntry type="module" module-name="utils_main" />
     <orderEntry type="library" name="Gradle: com.squareup.okio:okio:1.13.0" level="project" />
     <orderEntry type="library" name="Gradle: ch.qos.logback:logback-core:1.2.3" level="project" />
+    <orderEntry type="library" name="Gradle: com.googlecode.lanterna:lanterna:3.0.0" level="project" />
   </component>
 </module>

@@ -19,12 +19,14 @@ package ru.saber_nyan.board_cli.core.gui;
 import com.googlecode.lanterna.gui2.*;
 import okhttp3.OkHttpClient;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.saber_nyan.board_cli.core.Module;
 import ru.saber_nyan.board_cli.module.ImageboardBoard;
+import ru.saber_nyan.board_cli.utils.HttpException;
 import ru.saber_nyan.board_cli.utils.Pair;
+import ru.saber_nyan.board_cli.utils.Utils;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -91,12 +93,8 @@ public class BoardsScreen {
 
 	/**
 	 * Displays board selection dialog.
-	 *
-	 * @throws Throwable any exception that
-	 *                   thrown by module implementation
 	 */
-	public void draw() throws Throwable {
-
+	public void draw() {
 		Window window = new BasicWindow("Select board");
 		window.setHints(Arrays.asList(Window.Hint.FULL_SCREEN, Window.Hint.NO_DECORATIONS));
 
@@ -108,9 +106,12 @@ public class BoardsScreen {
 
 		Button okButton = new Button("OK", window::close)
 				.setLayoutData(LinearLayout.createLayoutData(LinearLayout.Alignment.Center));
+		Button exitButton = new Button("Exit", () -> System.exit(0))
+				.setLayoutData(LinearLayout.createLayoutData(LinearLayout.Alignment.Center));
 		customBoardNamePanel.addComponent(customBoardNameTextBox
 				.withBorder(Borders.singleLine("Board name")));
 		customBoardNamePanel.addComponent(okButton);
+		customBoardNamePanel.addComponent(exitButton);
 
 		basePanel.addComponent(customBoardNamePanel);
 
@@ -135,13 +136,7 @@ public class BoardsScreen {
 					null);
 		}
 
-		try {
-			load(chosen);
-		} catch (InvocationTargetException e) {
-			throw e.getTargetException();
-		} catch (NoSuchMethodException | IllegalAccessException | InstantiationException ignored) {
-			// Will never happen.. at least I think so.
-		}
+		load(chosen);
 	}
 
 	/**
@@ -149,21 +144,38 @@ public class BoardsScreen {
 	 *
 	 * @param selectedItem selected item pair
 	 */
-	private void load(@NotNull Pair<String, String> selectedItem) throws NoSuchMethodException, IllegalAccessException,
-			InvocationTargetException, InstantiationException {
+	private void load(@NotNull Pair<String, String> selectedItem) {
 		String boardAbbr = trimAbbr(selectedItem.getFirst());
-		@Nullable
 		String boardName = selectedItem.getSecond();
 		logger.debug("Trying to load \"{}\"...", boardAbbr);
 
-		ImageboardBoard board = (ImageboardBoard) module.getBoard()
-				.newInstance(boardAbbr, 0L, boardName, okHttpClient);
+		ImageboardBoard board;
+		try {
+			board = (ImageboardBoard) module.getBoard()
+					.newInstance(boardAbbr, 0L, boardName, okHttpClient);
+		} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+			throw new RuntimeException("while loading selected board:", e); // Will never happen~
+		}
+
 		try {
 			board.load();
-			board.getThreads().forEach(thread -> logger.info("Got >>{}, \"{}\"", thread.getNumber(), thread.getTitle()));
+			logger.debug("board loaded");
+		} catch (HttpException e) {
+			Utils.reportError(logger, gui,
+					"Server responded \"" + e.getResponseCode() + "\"", e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Utils.reportError(logger, gui,
+					"Request failed: " + e.getLocalizedMessage(), e);
+		} catch (JSONException e) {
+			Utils.reportError(logger, gui,
+					"Server responded with invalid JSON: " + e.getLocalizedMessage(), e);
 		}
+
+		ThreadsScreen threadsScreen = new ThreadsScreen(board, gui, module, okHttpClient);
+		threadsScreen.draw();
+
+		// When user exits from ThreadSelectScreen, show Board selection
+		draw();
 	}
 
 	/**

@@ -32,16 +32,16 @@ public class HarkachThreadTest {
 	@Test
 	public void construct() throws Exception {
 		// Тред об API на /abu/, не удалят ведь?
-		ImageboardThread thread = new HarkachThread("abu", null, 42375,
-				new OkHttpClient());
+		ImageboardThread thread = new HarkachThread("abu", null,
+				null, 42375, new OkHttpClient());
 		List<ImageboardPost> posts = thread.getPosts();
 		assertNull("WTF, posts already loaded?!", posts);
 	}
 
 	@Test
 	public void load() throws Exception {
-		ImageboardThread thread = new HarkachThread("abu", null, 42375,
-				new OkHttpClient());
+		ImageboardThread thread = new HarkachThread("abu", null,
+				null, 42375, new OkHttpClient());
 		thread.load();
 		List<ImageboardPost> posts = thread.getPosts();
 		assertNotNull("posts list is not loaded...", posts);
@@ -52,8 +52,8 @@ public class HarkachThreadTest {
 
 	@Test(expected = IllegalStateException.class)
 	public void load_twice() throws Exception {
-		ImageboardThread thread = new HarkachThread("abu", null, 42375,
-				new OkHttpClient());
+		ImageboardThread thread = new HarkachThread("abu", null,
+				null, 42375, new OkHttpClient());
 		thread.load();
 		thread.load();
 	}

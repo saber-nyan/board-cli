@@ -49,16 +49,18 @@ public class HarkachThread extends ImageboardThread {
 	private static final String KEY_THREAD_POSTS = "posts";
 
 	/**
-	 * To load the tread, use {@link #load()}!
+	 * To load the thread, use {@link #load()}!
 	 *
 	 * @param boardAbbreviation {@link #boardAbbreviation}
 	 * @param title             {@link #title}
+	 * @param opPost            {@link #opPost}
 	 * @param number            {@link #number}
 	 * @param okHttpClient      {@link #okHttpClient}
 	 */
 	public HarkachThread(@NotNull String boardAbbreviation, @Nullable String title,
-						 long number, @NotNull OkHttpClient okHttpClient) {
-		super(boardAbbreviation, title, number, okHttpClient);
+						 @Nullable ImageboardPost opPost, long number,
+						 @NotNull OkHttpClient okHttpClient) {
+		super(boardAbbreviation, title, opPost, number, okHttpClient);
 	}
 
 	/**

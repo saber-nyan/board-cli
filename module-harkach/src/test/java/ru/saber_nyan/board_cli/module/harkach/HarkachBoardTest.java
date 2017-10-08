@@ -50,11 +50,12 @@ public class HarkachBoardTest {
 		board1.load();
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void load_twice() throws Exception {
 		ImageboardBoard board = new HarkachBoard("a", 0, null,
 				new OkHttpClient());
 		board.load();
+		board.setPage(1);
 		board.load();
 	}
 }

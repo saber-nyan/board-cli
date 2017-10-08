@@ -35,7 +35,7 @@ import static org.junit.Assert.assertFalse;
 public class ModuleTest {
 
 	private static final String DOWNLOAD_URL = "https://github.com/saber-nyan/board-cli/releases/download/" +
-			"v0.0.1b/board-module-harkach.jar";
+			"temp_release/board-module-harkach.jar";
 
 	private static final String FILE_PATH = "." + File.separator + "test.jar";
 
@@ -76,7 +76,7 @@ public class ModuleTest {
 
 		//noinspection unused
 		ImageboardThread thread =
-				(ImageboardThread) module.getThread().newInstance("abu", null, 42375L, client);
+				(ImageboardThread) module.getThread().newInstance("abu", null, null, 42375L, client);
 //		thread.load(); // FIXME: Fukken weird bug! JSONException: JSONObject["fullname"] not found. at (HarkachFile.java:66)
 //		assertFalse("posts list fail (empty)", thread.getPosts().isEmpty());
 

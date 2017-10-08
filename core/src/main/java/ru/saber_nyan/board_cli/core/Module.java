@@ -18,6 +18,7 @@ package ru.saber_nyan.board_cli.core;
 
 import okhttp3.OkHttpClient;
 import org.json.JSONObject;
+import ru.saber_nyan.board_cli.module.ImageboardPost;
 import ru.saber_nyan.board_cli.module.ModuleInfo;
 import ru.saber_nyan.board_cli.utils.ModuleLoader;
 
@@ -165,9 +166,9 @@ public class Module {
 		board.setAccessible(true);
 
 		thread = threadCls.getDeclaredConstructor(
-				String.class, String.class, long.class, OkHttpClient.class
-		); //   board        |thread       |thread     |okHttpClient
-		//      abbreviation |title        |number
+				String.class, String.class, ImageboardPost.class, long.class, OkHttpClient.class
+		); //   board        |thread       |op-post              |thread     |okHttpClient
+		//      abbreviation |title        |                     |number
 		thread.setAccessible(true);
 
 		post = postCls.getDeclaredConstructor(

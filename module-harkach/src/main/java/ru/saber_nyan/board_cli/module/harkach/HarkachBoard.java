@@ -26,6 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import ru.saber_nyan.board_cli.module.ImageboardBoard;
+import ru.saber_nyan.board_cli.module.ImageboardPost;
 import ru.saber_nyan.board_cli.module.ImageboardThread;
 import ru.saber_nyan.board_cli.utils.HttpException;
 
@@ -64,13 +65,12 @@ public class HarkachBoard extends ImageboardBoard {
 	/**
 	 * Loads entire board, creates {@link HarkachThread} objects.
 	 *
-	 * @throws IllegalStateException if thread is already loaded
 	 * @throws IOException           if GET request failed
 	 *                               (try to cast to {@code utils.HttpException} first!)
 	 * @throws JSONException         if received JSON is invalid
 	 */
 	@Override
-	public void load() throws IllegalStateException, IOException, JSONException {
+	public void load() throws IOException, JSONException {
 		super.load();
 
 		String pageStr;
@@ -109,9 +109,12 @@ public class HarkachBoard extends ImageboardBoard {
 
 			String threadTitle = threadJson.getJSONArray(KEY_THREAD_POSTS).getJSONObject(0)
 					.optString(KEY_THREAD_SUBJECT, null);
+			ImageboardPost opPost = new HarkachPost(threadJson.getJSONArray(KEY_THREAD_POSTS).getJSONObject(0),
+					getOkHttpClient());
 			ImageboardThread imageboardThread = new HarkachThread(
 					getAbbreviation(),
 					threadTitle,
+					opPost,
 					threadJson.getLong(KEY_BOARD_THREAD_NUM),
 					getOkHttpClient()
 			);

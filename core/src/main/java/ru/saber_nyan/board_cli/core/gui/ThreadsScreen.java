@@ -16,13 +16,19 @@
 
 package ru.saber_nyan.board_cli.core.gui;
 
-import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
+import com.googlecode.lanterna.TerminalSize;
+import com.googlecode.lanterna.gui2.*;
 import okhttp3.OkHttpClient;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.saber_nyan.board_cli.core.Module;
 import ru.saber_nyan.board_cli.module.ImageboardBoard;
+import ru.saber_nyan.board_cli.module.ImageboardPost;
+import ru.saber_nyan.board_cli.module.ImageboardThread;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static ru.saber_nyan.board_cli.core.Main.TMP_DIR;
 import static ru.saber_nyan.board_cli.core.Main.VAR_NAME_TMP_DIR;
@@ -37,8 +43,7 @@ public class ThreadsScreen {
 	private static final Logger logger;
 
 	/**
-	 * Selected board (threads not loaded, need to
-	 * invoke {@link ImageboardBoard#load()}) explicitly.
+	 * Selected board (threads already loaded!)
 	 */
 	@NotNull
 	private final ImageboardBoard board;
@@ -63,7 +68,7 @@ public class ThreadsScreen {
 
 	static {
 		System.setProperty(VAR_NAME_TMP_DIR, TMP_DIR);
-		logger = LoggerFactory.getLogger(BoardsScreen.class);
+		logger = LoggerFactory.getLogger(ThreadsScreen.class);
 	}
 
 	/**
@@ -84,6 +89,70 @@ public class ThreadsScreen {
 	}
 
 	public void draw() {
+		List<ImageboardThread> threads = board.getThreads();
+		assert threads != null; // Already loaded!
 
+		Window window = new BasicWindow("Threads");
+		window.setHints(Arrays.asList(Window.Hint.FULL_SCREEN, Window.Hint.NO_DECORATIONS));
+
+		Panel basePanel = new Panel(new LinearLayout(Direction.VERTICAL));
+
+		threads.forEach((ImageboardThread thread) -> {
+			logger.trace("got #{}", thread.getNumber());
+			ImageboardPost opPost = thread.getOpPost();
+
+			Panel threadPanel = new Panel(new LinearLayout(Direction.VERTICAL)); // whole thread panel
+
+			// FIRST PANEL START
+			Panel titlePanel = new Panel(new LinearLayout(Direction.HORIZONTAL));
+			new Label("\u2116" + thread.getNumber()).addTo(titlePanel); // №
+			if (thread.getTitle() != null) {
+				new Label(thread.getTitle()).addTo(titlePanel);
+			}
+			if (opPost != null) {
+				if (opPost.getName() != null) {
+					new Label(opPost.getName()).addTo(titlePanel);
+				}
+			}
+			threadPanel.addComponent(titlePanel);
+			// FIRST PANEL END
+
+			// SECOND PANEL START
+			if (opPost != null) {
+				Label message = new Label(opPost.getComment());
+				TerminalSize newSize = message.getSize().withRelativeRows(+3);
+				message.setSize(newSize)
+//						.setPreferredSize(newSize) // Label is empty...
+						.addTo(threadPanel);
+			}
+			// SECOND PANEL END
+
+			// THIRD PANEL START
+			new Label(String.format("%s posts, %s files", thread.getPostCount(), thread.getFileCount()))
+					.addTo(threadPanel);
+			// THIRD PANEL END
+
+			// FOURTH PANEL START
+			new Button("Open", () -> {
+				window.close();
+				logger.debug("clicked num {}", thread.getNumber());
+			})
+					.addTo(threadPanel);
+			// FOURTH PANEL END
+
+			basePanel.addComponent(threadPanel.withBorder(Borders.singleLineBevel()));
+		});
+		window.setComponent(basePanel);
+		gui.addWindowAndWait(window);
 	}
 }
+/*
+  ------------------------
+  |№12345 Title Anon     | + FIRST PANEL
+  |comment (multiline)   | + SECOND PANEL
+  |..dasfdsfsfsfsdfdsf   | TODO: multiline bug
+  |sdfdsfdsfdsfsdfdsfsd  |
+  |10 posts, 2 files     | + THIRD PANEL
+  |[ Open ]              | + FOURTH PANEL
+  ------------------------
+ */

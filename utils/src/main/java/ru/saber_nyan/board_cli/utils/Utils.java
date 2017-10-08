@@ -14,21 +14,39 @@
  * limitations under the License.                                             *
  ******************************************************************************/
 
-group 'board-cli'
-version '0.0.1a'
+package ru.saber_nyan.board_cli.utils;
 
-apply plugin: 'java'
+import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
+import com.googlecode.lanterna.gui2.dialogs.MessageDialog;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
 
-sourceCompatibility = 1.8
+/**
+ * Various utilities.
+ */
+public final class Utils {
+	private Utils() {
+		super();
+	}
 
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    testCompile 'com.squareup.okhttp3:okhttp:3.9.0'
-
-    compile 'com.intellij:annotations:12.0'
-    compile 'com.googlecode.lanterna:lanterna:3.0.0'
-    compile 'org.slf4j:slf4j-api:1.7.25'
+	/**
+	 * Display dialog with error description.
+	 *
+	 * @param logger  logger instance
+	 * @param gui     Lanterna gui
+	 * @param message error description
+	 * @param error   (optional) {@link Throwable} object
+	 */
+	public static void reportError(@NotNull Logger logger,
+								   @NotNull WindowBasedTextGUI gui,
+								   @NotNull String message,
+								   @Nullable Throwable error) {
+		MessageDialog.showMessageDialog(gui, "An error has occurred", message);
+		if (error != null) {
+			logger.error("a non-critical error has occurred:", error);
+		} else {
+			logger.error("a non-critical error has occurred: {}", message);
+		}
+	}
 }

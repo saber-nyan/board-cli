@@ -35,6 +35,11 @@ public abstract class ImageboardThread {
 	@NotNull
 	private final String boardAbbreviation;
 	/**
+	 * Sometimes the first post is given in the list of threads.
+	 */
+	@Nullable
+	private ImageboardPost opPost = null;
+	/**
 	 * <i>Supported by some imageboards.</i>
 	 * <p>
 	 * Thread title.
@@ -74,18 +79,21 @@ public abstract class ImageboardThread {
 	private final OkHttpClient okHttpClient;
 
 	/**
-	 * To load the tread, use {@link #load()}!
+	 * To load the thread, use {@link #load()}!
 	 *
 	 * @param boardAbbreviation {@link #boardAbbreviation}
 	 * @param title             {@link #title}
+	 * @param opPost            {@link #opPost}
 	 * @param number            {@link #number}
 	 * @param okHttpClient      {@link #okHttpClient}
 	 */
 	public ImageboardThread(@NotNull String boardAbbreviation, @Nullable String title,
-							long number, @NotNull OkHttpClient okHttpClient) {
+							@Nullable ImageboardPost opPost, long number,
+							@NotNull OkHttpClient okHttpClient) {
 		super();
 		this.boardAbbreviation = boardAbbreviation;
 		this.title = title;
+		this.opPost = opPost;
 		this.number = number;
 		this.okHttpClient = okHttpClient;
 	}
@@ -96,6 +104,14 @@ public abstract class ImageboardThread {
 	@NotNull
 	public String getBoardAbbreviation() {
 		return boardAbbreviation;
+	}
+
+	/**
+	 * @return {@link #opPost}
+	 */
+	@Nullable
+	public ImageboardPost getOpPost() {
+		return opPost;
 	}
 
 	/**

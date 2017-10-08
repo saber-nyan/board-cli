@@ -84,6 +84,14 @@ public final class Main {
 		logger = LoggerFactory.getLogger(Main.class);
 	}
 
+	private static void die(Throwable e) {
+		logger.error("Shit, unknown exception was thrown!\n" +
+				"Please report the bug (with stacktrace) to https://github.com/saber-nyan/board-cli/issues\n" +
+				"Logs are stored here: " + TMP_DIR + "\n" +
+				"Stacktrace:", e);
+		System.exit(EXITCODE_UNKNOWN);
+	}
+
 	/**
 	 * Catches and reports any exception.
 	 *
@@ -92,13 +100,10 @@ public final class Main {
 	public static void main(String[] args) {
 		logger.debug("---NEW LAUNCH---");
 		try {
+			Thread.setDefaultUncaughtExceptionHandler((thread, exception) -> die(exception));
 			System.exit(main0(args));
 		} catch (Throwable e) {
-			logger.error("Shit, unknown exception was thrown!\n" +
-					"Please report the bug (with stacktrace) to https://github.com/saber-nyan/board-cli/issues\n" +
-					"Logs are stored here: " + TMP_DIR + "\n" +
-					"Stacktrace:", e);
-			System.exit(EXITCODE_UNKNOWN);
+			die(e);
 		}
 	}
 
